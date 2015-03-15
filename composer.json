@@ -1,0 +1,25 @@
+{
+    "name": "valentin/contao-fe_helper",
+    "type": "contao-module",
+    "description": "Contao Open Source CMS extension fe_helper",
+    "keywords": ["contao", "frontend helper"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name":"Valentin Sampl",
+            "email":"valentin.sampl@gmail.com",
+            "role":"Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.7",
+        "contao/core": ">=3.2,<4"
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "": "system/modules/fe_helper"
+            }
+        }
+    }
+}
