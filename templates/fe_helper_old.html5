@@ -1,0 +1,35 @@
+<div id="fe_helper">
+	<div class="toggle">Ein-/Ausblenden</div>
+	<div class="fe_helper_content">
+		<?php if ($pages = $this->pageTree): ?>
+			<?php foreach ($pages as $page): ?>
+			<ul class="level_1 fe_helper_pages">
+				<li><?php echo $page['link'];?>
+				<?php if ($articles = $page['articles']): ?>
+					<?php foreach ($articles as $article): ?>
+					<ul class="level_2 fe_helper_articles">
+						<li><?php echo $article['link'];?>
+						<?php if ($contents = $article['contents']): ?>
+							<ul class="level_3 fe_helper_contents">
+							<?php foreach ($contents as $content): ?>
+								<li><?php echo $content['link'];?>
+								<?php if ($content['newslist']): ?>
+								<div class="fe_helper_newslist"><?php echo $content['newslist'];?></div>
+								<?php endif ?>
+								<?php if ($content['news']): ?>
+								<div class="fe_helper_news">>> <?php echo $content['news'];?></div>
+								<?php endif ?>
+								</li>
+							<?php endforeach ?>
+							</ul>
+						<?php endif ?>
+						</li>
+					</ul>
+					<?php endforeach ?>
+				<?php endif ?>
+				</li>
+			</ul>
+			<?php endforeach ?>
+		<?php endif;?>
+	</div>
+</div>
