@@ -61,10 +61,12 @@ class FeHelper extends \Controller
 					$objContents = \ContentModel::findPublishedByPidAndTable($article->id, 'tl_article');
 
 					$contentCount = 1;
-					foreach ($objContents as $content) {
-						$pageTree[$page->id]['articles'][$article->id]['contents'][$content->id] = static::generateContent($content);
-						$pageTree[$page->id]['articles'][$article->id]['contents'][$content->id]['count'] = $contentCount; 
-						$contentCount++;
+					if($objContents) {
+						foreach ($objContents as $content) {
+							$pageTree[$page->id]['articles'][$article->id]['contents'][$content->id] = static::generateContent($content);
+							$pageTree[$page->id]['articles'][$article->id]['contents'][$content->id]['count'] = $contentCount; 
+							$contentCount++;
+						}
 					}
 
 				}
