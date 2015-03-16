@@ -28,6 +28,14 @@ namespace Vale\Contao;
 class FeHelper extends \Controller
 {
 
+	public function insertFeHelper($content, $template) {
+		
+		if(strpos($template, 'fe_') !== false) {
+			$content = str_replace('</body>', static::generateFeHelper().'</body>', $content);	
+
+		}
+		return $content;
+	}
 
 	public function generateFeHelper()
 	{
@@ -72,6 +80,7 @@ class FeHelper extends \Controller
 				}
 			}
 		}
+
 
 		$beLinks = array();
 
@@ -118,19 +127,20 @@ class FeHelper extends \Controller
 		$GLOBALS['TL_HEAD'][] = '<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700">';
 		$GLOBALS['TL_CSS'][] = 'system/modules/fe_helper/assets/css/fe_helper.css';
 
-		$objTemplate = new \FrontendTemplate('fe_helper');
+		$objTemplate = new \FrontendTemplate('frontend_helper'); 
 		$objTemplate->pageTree = $pageTree;
 		$objTemplate->beLinks = $beLinks;
 		$html = $objTemplate->parse();
+		return preg_replace('/[ \t]+/', ' ', preg_replace('/[\r\n]+/', "\n", $html));
 
-		$GLOBALS['TL_JQUERY'][] =
-<<<JAVASCRIPT
-	<script type="text/javascript">
-	jQuery(function($){
-		$('body').append('$html')
-	})
-	</script>
-JAVASCRIPT;
+// 		$GLOBALS['TL_JQUERY'][] =
+// <<<JAVASCRIPT
+// 	<script type="text/javascript">
+// 	jQuery(function($){
+// 		$('body').append('$html')
+// 	})
+// 	</script>
+// JAVASCRIPT;
 
 		// echo '<pre>';
 		// print_r($objPage);
