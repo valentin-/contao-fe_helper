@@ -12,3 +12,5 @@
  */
 
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('Vale\Contao\FeHelper', 'generateFeHelper');
+
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][] = array('Vale\Contao\FeHelper', 'insertFeHelper');
