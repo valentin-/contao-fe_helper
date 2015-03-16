@@ -37,5 +37,5 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'fe_helper' => 'system/modules/frontend_helper/templates',
+	'frontend_helper' => 'system/modules/fe_helper/templates',
 ));
