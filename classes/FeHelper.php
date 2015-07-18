@@ -174,7 +174,8 @@ class FeHelper extends \Controller
 
 		\System::loadLanguageFile('tl_article');
 
-		$name = sprintf('%s (%s)', $objArticle->title, $GLOBALS['TL_LANG']['tl_article'][$objArticle->inColumn]);
+		$colname = $GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ? $GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] : $GLOBALS['TL_LANG']['tl_article'][$objArticle->inColumn];
+		$name = sprintf('%s (%s)', $objArticle->title, $colname);
 		$url = static::getBackendURL('article', 'tl_content', $objArticle->id, null);
 		$_SESSION['fe_helper']['article_count'][$objArticle->inColumn]++;
 		$attributes[] = 'data-column="'.$objArticle->inColumn.'"';
