@@ -32,9 +32,11 @@ class FeHelper extends \Controller
 		
 		if(strpos($template, 'fe_') !== false) {
 			$content = str_replace('</body>', static::generateFeHelper().'</body>', $content);	
-
 		}
-		return $content;
+
+		$this->handleAjax();
+
+		return $content; 
 	}
 
 	public function generateFeHelper()
@@ -47,11 +49,6 @@ class FeHelper extends \Controller
 		}
 
 		$pageTree = array();
-
-
-		// $favourites = array(48,49);
-
-		// $arrPages = array_unique(array_merge((array)$objPage->id, $favourites));
 
 		$arrPages = array($objPage->id);
 
@@ -121,6 +118,25 @@ class FeHelper extends \Controller
 			}
 		}
 
+		$arrlayouts = array();
+		$objThemeLayouts = \LayoutModel::findByPid($objLayout->pid, array('order' => 'name'));
+
+		if($objThemeLayouts) {
+
+			if($objPage->includeLayout) {
+				$arrlayouts[-1] = $GLOBALS['TL_LANG']['fe_helper']['default'];
+			}
+
+			foreach ($objThemeLayouts as $layout) {
+				if($layout->id == $objLayout->id) {
+					continue;
+				}
+
+				$arrlayouts[$layout->id] = $layout->name; 
+			}
+
+		}
+
 		$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js';
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/fe_helper/assets/js/noconflict.js';
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/fe_helper/assets/js/fe_helper.js';
@@ -130,29 +146,14 @@ class FeHelper extends \Controller
 		$objTemplate = new \FrontendTemplate('frontend_helper'); 
 		$objTemplate->pageTree = $pageTree;
 		$objTemplate->beLinks = $beLinks;
+		$objTemplate->layout = $objLayout->row();
+
+		if(count($arrlayouts) > 1) {
+			$objTemplate->layouts = $arrlayouts;
+		}
+
 		$html = $objTemplate->parse();
 		return preg_replace('/[ \t]+/', ' ', preg_replace('/[\r\n]+/', "\n", $html));
-
-// 		$GLOBALS['TL_JQUERY'][] =
-// <<<JAVASCRIPT
-// 	<script type="text/javascript">
-// 	jQuery(function($){
-// 		$('body').append('$html')
-// 	})
-// 	</script>
-// JAVASCRIPT;
-
-		// echo '<pre>';
-		// print_r($objPage);
-		// echo '</pre>';
-
-		// echo '<pre>';
-		// print_r($objArticles);
-		// echo '</pre>';
-
-		// echo '<pre>';
-		// print_r($permissions);
-		// echo '</pre>';
 
 	}
 
@@ -199,7 +200,6 @@ class FeHelper extends \Controller
 		} elseif($GLOBALS['TL_LANG']['tl_content'][$objContent->type][0]) {
 			$title = $GLOBALS['TL_LANG']['tl_content'][$objContent->type][0];
 		}
-		// $title = $GLOBALS['TL_LANG']['tl_content'][$objContent->type][0] ? $GLOBALS['TL_LANG']['tl_content'][$objContent->type][0] : $objContent->type;
 
 		if($objContent->type == 'module') {
 			$objModule = \ModuleModel::findByPk($objContent->module);
@@ -377,4 +377,51 @@ class FeHelper extends \Controller
 
 		return false;
 	}
+
+
+	public function handleAjax() {
+
+		if(\Input::post('feHelperAjax')) {
+
+			global $objPage;
+			$objPage = \PageModel::findByPk($objPage->id);
+			$arrReturn = array();
+
+			if(\Input::post('action') == 'changeLayout') {
+
+				$id = \Input::post('id');
+
+
+				if($id == -1) {
+
+					$objPage->includeLayout = '';
+					$objPage->save();
+					$arrReturn['reload'] = true;
+
+				} else {
+
+					$objLayout = \LayoutModel::findByPk($id);
+
+					if($objLayout) {
+
+						$objPage->includeLayout = true;
+						$objPage->layout = $id;
+						$objPage->save();
+
+						$arrReturn['reload'] = true;
+
+					}
+
+				}
+			}
+
+			echo json_encode($arrReturn);
+			die;
+
+		}
+
+		
+
+	}
+
 }

@@ -1,7 +1,9 @@
 var activeArticle;
+var rt;
 
 jQuery(document).ready(function($){
 
+  rt = $('#fe_helper').data('token');
   // setTimeout(function(){
   //   if($('.rsfh-toolbar').length) {
   //     $('#fe_helper').css({
@@ -36,6 +38,31 @@ jQuery(document).ready(function($){
     // }
 
   }) 
+
+  $('.changeLayout').click(function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: window.location,
+      type: 'POST',
+      data: {
+        feHelperAjax: true,
+        action: 'changeLayout',
+        id: $(this).data('id'),
+        REQUEST_TOKEN: rt
+      },
+    })
+    .done(function(data) {
+
+      data = $.parseJSON(data);
+
+      if(data.reload) {
+        window.location.reload();
+      }
+
+    })
+    
+  });
 
   $(document).on('mouseleave', '#fe_helper .fe_helper_articles > li', function(){
     $('.mod_article').removeClass('fe_helper_highlight');
